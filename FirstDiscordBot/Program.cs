@@ -34,9 +34,9 @@ namespace FirstDiscordBot
         }
         private async Task MessageRecieved(SocketMessage msg)
         {
-            if (ParseMother(msg.Content.ToLower()))
+            if (ParseMother(msg.Content.ToLower())&&!(msg.Author.IsBot))
             {
-                await msg.Channel.SendMessageAsync("https://www.youtube.com/watch?v=aZFKzn5fBgM");
+                await msg.Channel.SendMessageAsync("КОД КРАСНЫЙ, КОД КРАСНЫЙ, ЗДЕСЬ ШУТКИ ПРО МАМАШ!!!\n https://www.youtube.com/watch?v=aZFKzn5fBgM");
             }
 
         }
