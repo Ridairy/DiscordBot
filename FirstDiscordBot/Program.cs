@@ -43,7 +43,8 @@ namespace FirstDiscordBot
             }
             if (FindImgByName(msg.Content.ToLower()))
             {
-                await msg.Channel.SendFileAsync(path+"\\"+ msg+".png");
+                SocketUser user = msg.Author;
+                await msg.Channel.SendFileAsync(path+"\\"+ msg+".png","\n"+user.Username+" feels like:");
             }
 
         }
