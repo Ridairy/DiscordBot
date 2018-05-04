@@ -2,6 +2,7 @@
 using Discord.WebSocket;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -11,6 +12,8 @@ namespace FirstDiscordBot
 {
     class Program
     {
+        readonly string path = AppDomain.CurrentDomain.BaseDirectory+"Img"; 
+
         static void Main(string[] args) 
             => new Program().MainAsync().GetAwaiter().GetResult();
        
@@ -38,6 +41,10 @@ namespace FirstDiscordBot
             {
                 await msg.Channel.SendMessageAsync("КОД КРАСНЫЙ, КОД КРАСНЫЙ, ЗДЕСЬ ШУТКИ ПРО МАМАШ!!!\n https://www.youtube.com/watch?v=aZFKzn5fBgM");
             }
+            if (FindImgByName(msg.Content.ToLower()))
+            {
+                await msg.Channel.SendFileAsync(path+"\\"+ msg+".png");
+            }
 
         }
         private bool ParseMother(string msg) {
@@ -46,6 +53,20 @@ namespace FirstDiscordBot
             MatchCollection matches = reg.Matches(msg);
             if (matches.Count > 0) {
                 return  true;
+            }
+            return false;
+        }
+        
+        private bool FindImgByName(string msg)
+        {
+            if (!(msg.ElementAt(0) == '('))
+                return false;
+            var str = Directory
+                .GetFiles(path,".png",SearchOption.AllDirectories)
+                .Select(Path.GetFileName);
+            if (str.Select(m=>m==msg)!=null)
+            {
+                return true;
             }
             return false;
         }
