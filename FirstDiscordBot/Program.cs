@@ -46,13 +46,23 @@ namespace FirstDiscordBot
                 SocketUser user = msg.Author;
                 await msg.Channel.SendFileAsync(path+"\\"+ msg+".png","\n"+user.Username+":");
             }
+            if (msg.Content=="!get emoji") {
+                string str = String.Join(" ; ", GetAllEmoji());
+                await msg.Channel.SendMessageAsync(str);
+            }
+            if (msg.Content =="!set emoji")
+            {
+                await msg.Channel.SendMessageAsync("Coming soon lol!");
+            }
 
         }
         private bool ParseMother(string msg) {
             string pattern = @"(тво[a-я]+)?\s?мам[a-я]+\s?(тво[a-я]+)?";
+            string ReplacePattern = @"[^а-я0-9]";
+            string FormMsg = Regex.Replace(msg, ReplacePattern, "");
             Regex reg = new Regex(pattern);
-            MatchCollection matches = reg.Matches(msg);
-            if (matches.Count > 0) {
+            MatchCollection matches = reg.Matches(FormMsg);
+            if (matches.Count != 0) {
                 return  true;
             }
             return false;
@@ -62,14 +72,20 @@ namespace FirstDiscordBot
         {
             if (!(msg.ElementAt(0) == '('))
                 return false;
-            var str = Directory
-                .GetFiles(path,".png",SearchOption.AllDirectories)
-                .Select(Path.GetFileName);
+            var str = GetAllEmoji();
             if (str.Select(m=>m==msg)!=null)
             {
                 return true;
             }
             return false;
+        }
+        private String[] GetAllEmoji()
+        {
+            var temp = Directory
+                .GetFiles(path, "*.png", SearchOption.AllDirectories)
+                .Select(Path.GetFileName)
+                .ToArray();
+            return  temp;
         }
 
     }
