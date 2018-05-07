@@ -37,23 +37,34 @@ namespace FirstDiscordBot
         }
         private async Task MessageRecieved(SocketMessage msg)
         {
-            if (ParseMother(msg.Content.ToLower())&&!(msg.Author.IsBot))
+            if (!(msg.Author.IsBot)&&ParseMother(msg.Content.ToLower()))
             {
                 await msg.Channel.SendMessageAsync("КОД КРАСНЫЙ, КОД КРАСНЫЙ, ЗДЕСЬ ШУТКИ ПРО МАМАШ!!!\n https://www.youtube.com/watch?v=aZFKzn5fBgM");
             }
-            if (FindImgByName(msg.Content.ToLower()))
+
+            if (msg.Content.StartsWith("(")&&FindImgByName(msg.Content.ToLower()))
             {
-                SocketUser user = msg.Author;
-                await msg.Channel.SendFileAsync(path+"\\"+ msg+".png","\n"+user.Username+":");
+                await msg.Channel.SendFileAsync(path+"\\"+ msg+".png","\n"+msg.Author.Username+":");
             }
-            if (msg.Content=="!get emoji") {
-                string str = String.Join(" ; ", GetAllEmoji());
-                await msg.Channel.SendMessageAsync(str);
+
+            if (msg.Content.StartsWith("!emoji ")) {
+                string NextCommand = msg.Content.Remove(0, 7);
+                if (NextCommand.StartsWith("get"))
+                {
+                    string[] strArray = GetAllEmoji();
+                    for (int i = 0; i < strArray.Count(); i++)
+                    {
+                        strArray[i] = strArray[i].Remove((strArray[i].Length - 4), 4);
+                    }
+                    await msg.Channel.SendMessageAsync(String.Join("\n", strArray));
+                }
+                //if (NextCommand.StartsWith("set"))
+                //{
+
+                //}
+                
             }
-            if (msg.Content =="!set emoji")
-            {
-                await msg.Channel.SendMessageAsync("Coming soon lol!");
-            }
+
 
         }
         private bool ParseMother(string msg) {
